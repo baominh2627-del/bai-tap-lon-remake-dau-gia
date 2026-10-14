@@ -3,6 +3,8 @@
 > Bài tập lớn môn **Lập trình nâng cao (LTNC)**  
 > Ứng dụng Desktop đấu giá theo thời gian thực, kiến trúc **Client–Server**, viết bằng **Java 25**
 
+> **Client web:** thư mục [`web/`](web/) có hướng dẫn chạy giao diện trình duyệt và kết nối với auction server hiện có. Phạm vi hiện tại gồm danh sách phiên, lọc danh mục, đăng ký/đăng nhập và đặt giá; các màn hình seller, admin và ví vẫn có trong ứng dụng JavaFX.
+
 ---
 
 ## 👥 Thành viên nhóm
