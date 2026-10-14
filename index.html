@@ -55,6 +55,10 @@
     <form method="dialog" class="dialog-close"><button aria-label="Đóng">×</button></form>
     <div class="bid-content"><span class="eyebrow">CHI TIẾT PHIÊN ĐẤU GIÁ</span><h2 id="bid-title">Đặt giá</h2><div class="price-summary"><div><small>Giá khởi điểm</small><b id="bid-starting"></b></div><div><small>Giá cao nhất hiện tại</small><b class="red-text" id="bid-current"></b></div><div><small>Hạn đăng kí đến</small><b id="bid-end"></b></div></div><div class="countdown-panel"><strong id="bid-countdown"></strong><span>Thời gian còn lại</span><span class="status-pill" id="bid-status"></span></div><section class="history-panel"><h3>📈 Lịch sử giá thầu</h3><div id="bid-history" class="history-list">Chưa có lịch sử đấu giá.</div></section><form id="bid-form"><h3>Đặt giá của bạn</h3><div class="bid-controls"><input name="amount" type="number" min="1" step="1000" placeholder="Nhập số tiền (VNĐ)" required><button class="button button-dark-red">🔨 Đặt Giá</button></div><p id="bid-error" class="form-error"></p></form><details class="auto-bid"><summary>🤖 Đấu giá tự động</summary><p>Thiết lập giới hạn và bước giá. Hệ thống sẽ tự đấu giá theo phiên hiện có.</p><div class="auto-fields"><label>Giá tối đa (VNĐ)<input id="auto-max" type="number" placeholder="VD: 5000000"></label><label>Mức tăng mỗi lần (VNĐ)<input id="auto-step" type="number" placeholder="VD: 500000"></label><label>Kích hoạt khi còn (phút)<input id="auto-minutes" type="number" value="10"></label></div><button id="auto-toggle" class="button button-amber">🤖 Bật tự động</button></details></div>
   </dialog>
+  <dialog id="dashboard-dialog" class="dashboard-dialog">
+    <header class="dashboard-head"><strong id="dashboard-brand">TINY HOARDER'S KEY MARKET</strong><span id="dashboard-heading">Bảng điều khiển</span><button id="dashboard-close" aria-label="Đóng">×</button></header>
+    <div class="dashboard-layout"><aside id="dashboard-nav" class="dashboard-nav"></aside><main id="dashboard-content" class="dashboard-content"></main></div>
+  </dialog>
   <div class="toast" id="toast" role="status"></div>
   <script src="web/config.js"></script><script src="web/app.js" defer></script>
 </body>
