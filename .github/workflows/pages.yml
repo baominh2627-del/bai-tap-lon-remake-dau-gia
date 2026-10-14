@@ -31,8 +31,9 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Assemble site
         run: |
-          mkdir -p _site
-          cp index.html web/style.css web/app.js web/config.js _site/
+          mkdir -p _site/web
+          cp index.html _site/
+          cp web/style.css web/app.js web/config.js web/logo_new.png web/shield.png _site/web/
           if [ -d uploads ]; then cp -R uploads _site/uploads; fi
       - name: Upload web client
         uses: actions/upload-pages-artifact@v3

@@ -3,16 +3,59 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fdfcf8"><title>Tiny Hoarder's Key Market</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="web/style.css">
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="./"><span class="brand-mark">T</span><span>TINY HOARDER'S <b>KEY MARKET</b></span></a><nav><a href="#auctions">Phiên đấu giá</a><a href="#about">Cách tham gia</a></nav><div class="account" id="account"><button class="btn btn-light" id="open-login">Đăng nhập</button><button class="btn btn-primary" id="open-register">Tạo tài khoản</button></div></header>
+  <header class="app-header">
+    <div class="top-row">
+      <a class="brand" href="./">TINY HOARDER'S KEY MARKET</a>
+      <div class="account" id="account">
+        <div class="guest-box"><button class="button button-red" id="open-register">Đăng kí</button><button class="button button-outline" id="open-login">Đăng nhập</button><button class="icon-button" id="guest-notifications" aria-label="Thông báo">🔔<i></i></button></div>
+      </div>
+    </div>
+    <nav class="category-nav" aria-label="Danh mục">
+      <button class="nav-filter active" data-filter="ALL">🏠 <span>Tiền sảnh</span></button>
+      <button class="nav-filter" data-filter="ART">🎨 <span>Nghệ thuật</span></button>
+      <button class="nav-filter" data-filter="VEHICLE">🚗 <span>Phương tiện</span></button>
+      <button class="nav-filter" data-filter="ELECTRONICS">💻 <span>Điện tử</span></button>
+      <button class="nav-filter" data-filter="FAVORITES">❤️ <span>Yêu thích</span></button>
+    </nav>
+  </header>
   <main>
-    <section class="hero"><div class="hero-copy"><span class="eyebrow"><i></i> MỖI MÓN ĐỒ, MỘT CÂU CHUYỆN</span><h1>Săn tìm điều<br><em>độc bản.</em></h1><p>Khám phá những món đồ đáng sưu tầm và tham gia phiên đấu giá trực tuyến theo thời gian thực.</p><a class="btn btn-primary" href="#auctions">Khám phá phiên đấu giá <span>↗</span></a><div class="hero-note"><span>✦</span> Minh bạch · An toàn · Thời gian thực</div></div><div class="hero-art"><div class="sun"></div><div class="art-card"><div class="art-image"><span>✳</span><small>OBJECT NO. 024</small></div><div class="art-caption"><span>CURATED COLLECTIBLES</span><b>Những món đồ<br>có câu chuyện riêng.</b></div></div><div class="floating-tag">EST. 2024<br><b>HANOI, VN</b></div><div class="art-stamp">ĐỘC<br>BẢN</div></div></section>
-    <section class="auction-section" id="auctions"><div class="section-heading"><div><span class="eyebrow">ĐANG DIỄN RA</span><h2>Phiên đấu giá <em>nổi bật</em></h2></div><div class="filters"><button class="filter active" data-filter="ALL">Tất cả</button><button class="filter" data-filter="ART">Nghệ thuật</button><button class="filter" data-filter="ELECTRONICS">Điện tử</button><button class="filter" data-filter="VEHICLE">Xe cộ</button></div></div><div class="status-line"><span id="connection-dot"></span><span id="status">Đang tải phiên đấu giá...</span><button id="refresh" class="text-button">↻ Làm mới</button></div><div class="grid" id="auction-grid"></div><div class="empty" id="empty" hidden>Chưa có phiên đấu giá nào phù hợp.</div></section>
-    <section class="how" id="about"><span class="eyebrow">BẮT ĐẦU THẬT DỄ DÀNG</span><h2>Một món đồ hay,<br><em>một cú trả giá.</em></h2><div class="steps"><article><span>01</span><b>Tìm món bạn thích</b><p>Khám phá các món đồ nghệ thuật, điện tử và sưu tầm.</p></article><article><span>02</span><b>Tham gia phiên</b><p>Tạo tài khoản, đăng nhập và theo dõi giá hiện tại.</p></article><article><span>03</span><b>Đặt giá của bạn</b><p>Đấu giá trực tiếp với cập nhật giá theo thời gian thực.</p></article></div></section>
-  </main><footer><a class="brand" href="./"><span class="brand-mark">T</span><span>TINY HOARDER'S <b>KEY MARKET</b></span></a><span>Đấu giá những điều bạn trân trọng.</span><span>© 2026</span></footer>
-  <dialog id="auth-dialog"><form method="dialog" class="dialog-close"><button aria-label="Đóng">×</button></form><div class="dialog-content"><span class="eyebrow" id="auth-eyebrow">WELCOME BACK</span><h2 id="auth-title">Chào mừng<br><em>trở lại.</em></h2><form id="auth-form"><label>Tên đăng nhập<input name="username" autocomplete="username" required minlength="3"></label><label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required minlength="6"></label><label id="role-field" hidden>Vai trò<select name="role"><option value="BIDDER">Người đặt giá</option><option value="SELLER">Người bán</option></select></label><p id="auth-error" class="form-error"></p><button class="btn btn-primary full" id="auth-submit">Đăng nhập</button></form><p class="switch-auth" id="auth-switch"></p></div></dialog>
-  <dialog id="bid-dialog"><form method="dialog" class="dialog-close"><button aria-label="Đóng">×</button></form><div class="dialog-content"><span class="eyebrow">THAM GIA ĐẤU GIÁ</span><h2 id="bid-title">Đặt giá</h2><p id="bid-current" class="bid-current"></p><form id="bid-form"><label>Mức giá của bạn (₫)<input name="amount" type="number" min="1" step="1000" required></label><p id="bid-error" class="form-error"></p><button class="btn btn-primary full">Xác nhận đặt giá</button></form></div></dialog>
-  <div class="toast" id="toast" role="status"></div><script src="config.js"></script><script src="app.js" defer></script>
-</body></html>
+    <section class="search-panel">
+      <h1>Tìm kiếm</h1>
+      <form class="search-box" id="search-form"><input id="search-input" type="search" placeholder="Nhập từ khóa tìm kiếm..." autocomplete="off"><button aria-label="Tìm kiếm">🔍</button></form>
+    </section>
+    <section class="auctions-area" aria-label="Các phiên đấu giá">
+      <div class="results-bar"><span id="connection-dot"></span><span id="status">Đang tải phiên đấu giá...</span><button id="refresh" class="refresh-button">↻ Làm mới</button></div>
+      <div class="auction-grid" id="auction-grid"></div>
+      <div class="empty-state" id="empty" hidden>Chưa có phiên đấu giá nào phù hợp.</div>
+    </section>
+  </main>
+  <dialog id="auth-dialog" class="auth-dialog">
+    <form method="dialog" class="dialog-close"><button aria-label="Đóng">×</button></form>
+    <section class="login-art"><img src="web/logo_new.png" alt="Tiny Hoarder's Key Market"></section>
+    <section class="auth-content">
+      <header class="auth-heading"><img src="web/shield.png" alt="" id="auth-shield"><span id="auth-eyebrow">TINY HOARDER'S KEY MARKET</span></header>
+      <h2 id="auth-title">Đăng nhập</h2>
+      <form id="auth-form">
+        <label id="name-field" hidden>Họ và Tên<input name="fullName" placeholder="Nhập họ và tên"></label>
+        <label>Tên đăng nhập<input name="username" placeholder="Nhập tên đăng nhập" autocomplete="username" required minlength="3"></label>
+        <label>Mật khẩu<input name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required minlength="6"></label>
+        <label id="confirm-field" hidden>Xác thực mật khẩu<input name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu"></label>
+        <label id="role-field" hidden>Chọn chức năng<select name="role"><option value="BIDDER">Người đặt giá</option><option value="SELLER">Người bán</option></select></label>
+        <p id="auth-error" class="form-error">Xin mời nhập thông tin</p>
+        <button class="button button-red auth-submit" id="auth-submit">Đăng Nhập</button>
+        <button type="button" class="button button-red auth-submit" id="auth-cancel">Thoát</button>
+      </form>
+      <p class="switch-auth" id="auth-switch"></p>
+    </section>
+  </dialog>
+  <dialog id="bid-dialog" class="bid-dialog">
+    <form method="dialog" class="dialog-close"><button aria-label="Đóng">×</button></form>
+    <div class="bid-content"><span class="eyebrow">CHI TIẾT PHIÊN ĐẤU GIÁ</span><h2 id="bid-title">Đặt giá</h2><div class="price-summary"><div><small>Giá khởi điểm</small><b id="bid-starting"></b></div><div><small>Giá cao nhất hiện tại</small><b class="red-text" id="bid-current"></b></div><div><small>Hạn đăng kí đến</small><b id="bid-end"></b></div></div><div class="countdown-panel"><strong id="bid-countdown"></strong><span>Thời gian còn lại</span><span class="status-pill" id="bid-status"></span></div><section class="history-panel"><h3>📈 Lịch sử giá thầu</h3><div id="bid-history" class="history-list">Chưa có lịch sử đấu giá.</div></section><form id="bid-form"><h3>Đặt giá của bạn</h3><div class="bid-controls"><input name="amount" type="number" min="1" step="1000" placeholder="Nhập số tiền (VNĐ)" required><button class="button button-dark-red">🔨 Đặt Giá</button></div><p id="bid-error" class="form-error"></p></form><details class="auto-bid"><summary>🤖 Đấu giá tự động</summary><p>Thiết lập giới hạn và bước giá. Hệ thống sẽ tự đấu giá theo phiên hiện có.</p><div class="auto-fields"><label>Giá tối đa (VNĐ)<input id="auto-max" type="number" placeholder="VD: 5000000"></label><label>Mức tăng mỗi lần (VNĐ)<input id="auto-step" type="number" placeholder="VD: 500000"></label><label>Kích hoạt khi còn (phút)<input id="auto-minutes" type="number" value="10"></label></div><button id="auto-toggle" class="button button-amber">🤖 Bật tự động</button></details></div>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="web/config.js"></script><script src="web/app.js" defer></script>
+</body>
+</html>
