@@ -8,8 +8,13 @@ let selectedFilter = 'ALL';
 let selectedAuction = null;
 
 async function command(action, data = {}) {
-  const result = await fetch('/api/action', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action, data }) });
-  const payload = await result.json();
+  const apiBase = window.AUCTION_API_BASE || '';
+  const endpoint = apiBase ? `${apiBase.replace(/\/$/, '')}/api/action` : new URL('api/action', document.baseURI).href;
+  const result = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action, data }) });
+  const payload = await result.json().catch(() => ({}));
+  if (!payload.response && !result.ok && !apiBase) {
+    throw new Error('Giao diện đã tải. Để xem phiên và đặt giá, cần khởi chạy auction server cùng web/server.js theo web/README.md.');
+  }
   if (!result.ok) throw new Error(payload.error || 'Không thể kết nối máy chủ.');
   return payload.response || '';
 }
@@ -28,7 +33,7 @@ function render() {
   const list = auctions.filter(a => selectedFilter === 'ALL' || String(a.itemType).toUpperCase().includes(selectedFilter));
   $('#empty').hidden = list.length !== 0;
   grid.innerHTML = list.map((a, i) => {
-    const image = a.imageUrl && !a.imageUrl.startsWith('http') ? `/${a.imageUrl.replace(/^\/+/, '')}` : a.imageUrl;
+    const image = a.imageUrl && !a.imageUrl.startsWith('http') ? `${a.imageUrl.replace(/^\/+/, '')}` : a.imageUrl;
     const imageStyle = image ? `style="background-image:url('${esc(image)}')"` : '';
     const type = ({ ART: 'Nghệ thuật', ELECTRONICS: 'Điện tử', VEHICLE: 'Xe cộ' })[String(a.itemType).toUpperCase()] || esc(a.itemType || 'Sưu tầm');
     return `<article class="auction-card"><div class="card-image ${image ? 'has-image' : ''}" ${imageStyle}><span class="category">${type}</span>${!image ? `<span class="placeholder-shape shape-${i % 3}">${['✳', '◈', '◉'][i % 3]}</span>` : ''}<span class="time-left">◷ ${remaining(a.endTime)}</span></div><div class="card-body"><div class="card-meta">${esc(a.status || 'OPEN')} <span>${Number(a.bidCount || 0)} lượt trả giá</span></div><h3>${esc(a.itemName || 'Món đồ sưu tầm')}</h3><p class="description">${esc(a.description || `Món đồ ${type.toLowerCase()} đang chờ chủ nhân mới.`)}</p><div class="price-row"><div><small>GIÁ HIỆN TẠI</small><b>${money(a.currentHighestBid || a.startingPrice)}</b></div><button class="bid-button" data-id="${esc(a.auctionId)}" aria-label="Đặt giá">↗</button></div></div></article>`;

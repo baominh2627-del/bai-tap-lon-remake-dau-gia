@@ -32,4 +32,10 @@ Giao diện trình duyệt cho dự án Tiny Hoarder's Key Market. Web server No
 - Làm mới danh sách tự động định kỳ; hình ảnh đã tải lên được phục vụ từ thư mục `uploads/items`.
 - Giao diện co giãn cho màn hình desktop và điện thoại.
 
+## Đưa giao diện lên GitHub Pages
+
+Workflow `.github/workflows/pages.yml` tự deploy nội dung `web/` khi có commit lên `main`. Trong repository GitHub, vào **Settings → Pages** và chọn **GitHub Actions** làm nguồn deploy. Website sẽ hiển thị tại `https://<owner>.github.io/<repository>/`.
+
+GitHub Pages chỉ lưu trữ giao diện tĩnh. Để dữ liệu và đặt giá hoạt động trên website công khai, cần chạy `web/server.js` cùng auction server trên một máy chủ có thể truy cập qua HTTPS, cấu hình CORS và cookie cho phép origin GitHub Pages, rồi điền URL máy chủ đó vào `web/config.js` (`window.AUCTION_API_BASE`).
+
 Client web này hiện bao gồm luồng bidder cơ bản. Các màn hình seller, quản trị, ví và biểu đồ lịch sử vẫn còn ở JavaFX desktop và cần được chuyển tiếp nếu cần đầy đủ toàn bộ chức năng trên web.
