@@ -9,6 +9,7 @@ let selectedAuction = null;
 let favoriteIds = new Set();
 let searchTerm = '';
 let autoBidEnabled = false;
+let demoMode = false;
 
 async function command(action, data = {}) {
   const apiBase = window.AUCTION_API_BASE || '';
@@ -31,6 +32,32 @@ function remaining(endTime) {
 function dateOnly(endTime) { const match = String(endTime || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return match ? `${match[3]}/${match[2]}/${match[1]}` : '---'; }
 function esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
 function categoryName(type) { return ({ ART: 'Nghệ thuật', ELECTRONICS: 'Điện tử', VEHICLE: 'Phương tiện' })[String(type || '').toUpperCase()] || 'Khác'; }
+function buildDemoAuctions() {
+  const samples = [
+    { itemName: 'G.5 - BKS 30K - 888.88', itemType: 'VEHICLE', startingPrice: 120000000, currentHighestBid: 215000000, bidCount: 36, description: 'Biển số xe sưu tầm' },
+    { itemName: 'H.5 - BKS 51K - 777.77', itemType: 'VEHICLE', startingPrice: 80000000, currentHighestBid: 150000000, bidCount: 12, description: 'Biển số xe sưu tầm' },
+    { itemName: 'Biệt thự Hồ Tây', itemType: 'OTHER', startingPrice: 5000000000, currentHighestBid: 6200000000, bidCount: 8, description: 'Bất động sản' },
+    { itemName: 'Tranh sơn dầu - Bùi Xuân Phái', itemType: 'ART', startingPrice: 200000000, currentHighestBid: 380000000, bidCount: 19, description: 'Tác phẩm nghệ thuật sưu tầm' },
+    { itemName: 'Mercedes-Benz S500 2020', itemType: 'VEHICLE', startingPrice: 2800000000, currentHighestBid: 3100000000, bidCount: 14, description: 'Xe đã qua sử dụng' },
+    { itemName: 'Rolex Submariner Date', itemType: 'OTHER', startingPrice: 180000000, currentHighestBid: 245000000, bidCount: 31, description: 'Đồng hồ sưu tầm' }
+  ];
+  return samples.map((item, index) => ({
+    ...item,
+    auctionId: -(index + 1),
+    status: 'RUNNING',
+    stepPrice: 1000000,
+    endTime: new Date(Date.now() + (index + 2) * 60 * 60 * 1000).toISOString(),
+    demo: true
+  }));
+}
+function showDemoAuctions(statusText) {
+  demoMode = true;
+  auctions = buildDemoAuctions();
+  $('#status').textContent = statusText;
+  $('#connection-dot').classList.remove('online');
+  $('#connection-dot').classList.add('demo');
+  render();
+}
 function render() {
   const list = auctions.filter(a => {
     const type = String(a.itemType || '').toUpperCase();
@@ -43,9 +70,10 @@ function render() {
     const id = Number(a.auctionId);
     const favorite = favoriteIds.has(id);
     const time = remaining(a.endTime);
-    const bidLabel = currentUser ? 'Đấu giá' : 'Đăng kí đấu giá';
+    const bidLabel = demoMode ? 'Phiên minh họa' : currentUser ? 'Đấu giá' : 'Đăng kí đấu giá';
     return `<article class="auction-card" data-id="${id}">
-      <div class="card-title-row"><h2>${esc(a.itemName || 'Sản phẩm đấu giá')}</h2><button class="favorite-button ${favorite ? 'selected' : ''}" data-favorite="${id}" aria-label="Yêu thích">${favorite ? '♥' : '♡'}</button></div>
+      ${demoMode ? '<span class="demo-badge">DỮ LIỆU MINH HỌA</span>' : ''}
+      <div class="card-title-row"><h2>${esc(a.itemName || 'Sản phẩm đấu giá')}</h2><button class="favorite-button ${favorite ? 'selected' : ''}" data-favorite="${id}" aria-label="Yêu thích" ${demoMode ? 'disabled title="Yêu thích cần kết nối máy chủ"' : ''}>${favorite ? '♥' : '♡'}</button></div>
       <div class="card-divider"></div>
       <div class="card-info">
         <span class="label">Giá khởi điểm:</span><span class="value">${money(a.startingPrice)}</span>
@@ -54,24 +82,34 @@ function render() {
         <span class="label">Thầu thứ:</span><span class="value">${Number(a.bidCount || 0)}</span>
         <span class="label">Hạn đăng kí đến:</span><span class="value">${dateOnly(a.endTime)}</span>
       </div>
-      <button class="bid-button" data-bid="${id}">${bidLabel}</button>
+      <button class="bid-button" data-bid="${id}" ${demoMode ? 'disabled' : ''}>${bidLabel}</button>
       <a class="detail-link" href="#auction-${id}" data-detail="${id}">Xem chi tiết &amp; Lịch sử</a>
     </article>`;
   }).join('');
-  grid.querySelectorAll('[data-bid]').forEach(button => button.addEventListener('click', () => currentUser ? openAuction(button.dataset.bid) : openAuth(false)));
-  grid.querySelectorAll('[data-detail]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); openAuction(link.dataset.detail); }));
+  grid.querySelectorAll('[data-bid]').forEach(button => button.addEventListener('click', () => demoMode ? toast('Đây là phiên minh họa. Kết nối máy chủ để đặt giá thật.') : currentUser ? openAuction(button.dataset.bid) : openAuth(false)));
+  grid.querySelectorAll('[data-detail]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); if (demoMode) toast('Đây là phiên minh họa; lịch sử và chi tiết thật cần máy chủ.'); else openAuction(link.dataset.detail); }));
   grid.querySelectorAll('[data-favorite]').forEach(button => button.addEventListener('click', () => toggleFavorite(button.dataset.favorite)));
 }
 async function loadAuctions() {
-  $('#status').textContent = 'Đang tải phiên đấu giá...';
+  if (!demoMode) $('#status').textContent = 'Đang tải phiên đấu giá...';
   try {
     const reply = await command('GET_AUCTIONS');
     if (!reply.startsWith('AUCTIONS===')) throw new Error(reply || 'Không tải được phiên đấu giá.');
-    auctions = JSON.parse(reply.slice('AUCTIONS==='.length)).filter(a => ['OPEN', 'RUNNING'].includes(a.status));
+    const liveAuctions = JSON.parse(reply.slice('AUCTIONS==='.length)).filter(a => ['OPEN', 'RUNNING'].includes(a.status));
+    if (liveAuctions.length === 0) {
+      showDemoAuctions('Chưa có phiên thật · đang hiển thị 6 phiên minh họa');
+      $('#connection-dot').classList.add('online');
+      return;
+    }
+    demoMode = false;
+    auctions = liveAuctions;
     $('#status').textContent = `${auctions.length} phiên đấu giá`;
     $('#connection-dot').classList.add('online');
+    $('#connection-dot').classList.remove('demo');
     render();
-  } catch (error) { $('#status').textContent = error.message; $('#connection-dot').classList.remove('online'); }
+  } catch {
+    showDemoAuctions('Chưa kết nối máy chủ · đang hiển thị 6 phiên minh họa');
+  }
 }
 function openAuth(register = false) {
   authDialog.dataset.mode = register ? 'register' : 'login';
@@ -275,6 +313,7 @@ async function loadFavorites() {
   } catch { favoriteIds.clear(); }
 }
 async function toggleFavorite(id) {
+  if (demoMode) { toast('Yêu thích cần kết nối máy chủ.'); return; }
   if (!currentUser) { openAuth(false); return; }
   const numericId = Number(id), wasFavorite = favoriteIds.has(numericId);
   try {
