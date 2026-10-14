@@ -34,7 +34,7 @@ Giao diện trình duyệt cho dự án Tiny Hoarder's Key Market. Web server No
 
 ## Đưa giao diện lên GitHub Pages
 
-Workflow `.github/workflows/pages.yml` tự deploy nội dung `web/` khi có commit lên `main`. Trong repository GitHub, vào **Settings → Pages** và chọn **GitHub Actions** làm nguồn deploy. Website sẽ hiển thị tại `https://<owner>.github.io/<repository>/`.
+Workflow `.github/workflows/pages.yml` tự deploy `index.html` ở thư mục gốc cùng CSS, JavaScript và ảnh khi có commit lên `main`. Trong repository GitHub, vào **Settings → Pages** và chọn **GitHub Actions** làm nguồn deploy. Website sẽ hiển thị tại `https://<owner>.github.io/<repository>/`.
 
 GitHub Pages chỉ lưu trữ giao diện tĩnh. Để dữ liệu và đặt giá hoạt động trên website công khai, cần chạy `web/server.js` cùng auction server trên một máy chủ có thể truy cập qua HTTPS, cấu hình CORS và cookie cho phép origin GitHub Pages, rồi điền URL máy chủ đó vào `web/config.js` (`window.AUCTION_API_BASE`).
 

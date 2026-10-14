@@ -78,7 +78,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
   const requested = pathname === '/' ? 'index.html' : pathname.slice(1);
-  const base = requested.startsWith('uploads/') ? path.resolve(root, '..') : root;
+  const base = requested === 'index.html' || requested.startsWith('uploads/') ? path.resolve(root, '..') : root;
   const file = path.resolve(base, requested);
   if (!file.startsWith(base + path.sep)) return send(res, 403, { error: 'Forbidden' });
   fs.readFile(file, (error, content) => {
